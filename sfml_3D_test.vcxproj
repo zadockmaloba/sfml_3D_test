@@ -91,7 +91,7 @@
       <AdditionalIncludeDirectories>C:\vcpkg\vcpkg-master\installed\x86-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\vcpkg\vcpkg-master\installed\x86-windows\lib;C:\vcpkg\vcpkg-master\installed\x86-windows\debug\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-window-d.lib;sfml-system-d.lib;sfml-graphics-d.lib;sfml-audio-d.lib;sfml-network-d.lib;%(AdditionalDependencies);GLU32.lib;OpenGL32.lib</AdditionalDependencies>
@@ -146,6 +146,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="squareOBjects.cpp" />
+    <ClCompile Include="triangleObjects.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main_include.h" />
+    <ClInclude Include="squareOBjects.h" />
+    <ClInclude Include="triangleObjects.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
