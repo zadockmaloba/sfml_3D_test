@@ -1,8 +1,9 @@
+#include <GL/glew.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
 #include <GL/GLU.h>
+#include <EGL/egl.h>
 #include <iostream>
-#include "squareObjects.h"
 
 static const sf::Vector2i WIN_SIZE{ 600,600 };
 void gameLoop(sf::RenderWindow* win);
@@ -24,27 +25,35 @@ int main()
 void gameLoop(sf::RenderWindow* win)
 {
 	//Declare objects not meant to be in the Loop here...
-	/*glClearDepth(1.f);
-	glClearColor(0.3f, 0.3f, 0.3f, 0.f);
-	glEnable(GL_DEPTH_TEST);
-	glDepthMask(GL_TRUE);
-	//// Setup a perspective projection & Camera position
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(112.f, 1.f, 1.f, 300.0f);//fov, aspect, zNear, zFar */
+	float positions[18] = {
+		-0.5f,0.5f,0.0f,
+		 0.0f,0.5f,1.0f,
+		 0.5f,0.0f,0.5f,
+		-0.8f,0.8f,-0.5f,
+		 0.0f,0.5f,-1.0f,
+		 0.5f,0.0f,0.0f,
+	};
+	glewInit();
+	unsigned int buffer;
+	unsigned int bufA ;
+	glGenBuffers(1, &bufA);
+	glBindBuffer(GL_ARRAY_BUFFER, bufA);
+	glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), positions, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+
+	//ANTIALIASED_QUALITY;
 
 	sf::Clock Clock;
-	bool rotate = true;
-	float angle;
-	squareObj sqrbj;
 
 	//Decl_Objs
 	while (win->isOpen())
 	{
+		float nTime = Clock.getElapsedTime().asSeconds();
 		win->clear();
 		//Draw Game Objects Here...
-
-
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 		//Draw_Objs
 
 		//Event Loop ...
@@ -53,64 +62,13 @@ void gameLoop(sf::RenderWindow* win)
 		{
 			if (evnts.type == sf::Event::Closed) win->close();
 			if (evnts.type == sf::Event::Resized)std::cout<<"resized";
-			if ((evnts.type == sf::Event::KeyPressed) && (evnts.key.code == sf::Keyboard::A)) {
-				rotate = !rotate;
-			}
+			
 		}//Event_loop
-		 // Apply some transformations for the cube
-		/*glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		glTranslatef(0.f, 0.f, -200.f);*/
+		glRotatef(nTime * .3f, 1, 1, 0);
+		glRotatef(nTime * .8f, 0, 1, 1);
+		glRotatef(nTime * .2f, 1, 0, 1);
 
-		if (rotate) {
-			angle = Clock.getElapsedTime().asSeconds();
-		}
-		glRotatef(angle * 50, 1.f, 0.f, 0.f);
-		//glRotatef(angle * 30, 0.f, 1.f, 0.f);
-		glRotatef(angle * 90, 0.f, 0.f, 1.f);
-
-		//Draw a cube
-		sqrbj.drawObject(4,sf::Vector3f(50,20,60));
-		/*
-		glBegin(GL_QUADS);//draw some squares
-		glColor3i(0, 1, 1);
-		glVertex3f(-50.f, -50.f, -50.f);
-		glVertex3f(-50.f, 50.f, -50.f);
-		glVertex3f(50.f, 50.f, -50.f);
-		glVertex3f(50.f, -50.f, -50.f);
-
-		glColor3f(0, 0, 1);
-		glVertex3f(-50.f, -50.f, 50.f);
-		glVertex3f(-50.f, 50.f, 50.f);
-		glVertex3f(50.f, 50.f, 50.f);
-		glVertex3f(50.f, -50.f, 50.f);
-
-		glColor3f(1, 0, 1);
-		glVertex3f(-50.f, -50.f, -50.f);
-		glVertex3f(-50.f, 50.f, -50.f);
-		glVertex3f(-50.f, 50.f, 50.f);
-		glVertex3f(-50.f, -50.f, 50.f);
-
-		glColor3f(0, 1, 0);
-		glVertex3f(50.f, -50.f, -50.f);
-		glVertex3f(50.f, 50.f, -50.f);
-		glVertex3f(50.f, 50.f, 50.f);
-		glVertex3f(50.f, -50.f, 50.f);
-
-		glColor3f(1, 0, 0);
-		glVertex3f(-50.f, -50.f, 50.f);
-		glVertex3f(-50.f, -50.f, -50.f);
-		glVertex3f(50.f, -50.f, -50.f);
-		glVertex3f(50.f, -50.f, 50.f);
-
-		glColor3f(1, 0, 0);
-		glVertex3f(-50.f, 50.f, 50.f);
-		glVertex3f(-50.f, 50.f, -50.f);
-		glVertex3f(50.f, 50.f, -50.f);
-		glVertex3f(50.f, 50.f, 50.f);
-
-		glEnd();
-		*/
 		win->display();
+		if (nTime >= 1.9f ) Clock.restart();
 	}
 }
